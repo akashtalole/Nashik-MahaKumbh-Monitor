@@ -23,3 +23,8 @@ No dependencies (Python stdlib, vanilla JS).
 `python3 scraper/scrape_meetings.py [--text]` scrapes <https://divcomnashik.maharashtra.gov.in/en/meeting-proceedings/> into `data/meetings.json` + `web/meetings_data.js`.
 Date, forum, chair and topic come from titles. `--text` downloads the PDFs (slow, ~5 min, needs `pdftotext`) and stores lossy Marathi text for search; it caches in `data/minutes_text/` (git-ignored).
 Minutes you haven't seen before in a browser are tagged **NEW** (stored in localStorage).
+
+## Daily publish (GitHub Pages)
+`.github/workflows/publish.yml` re-scrapes both pages every day (~06:17 IST), then deploys `web/` to GitHub Pages. It can also be run on demand from the Actions tab. If a scrape fails or returns suspiciously few rows, the job fails and the previous site stays live.
+
+One-time setup: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. The workflow must be on the default branch (`main`) for the schedule to run.

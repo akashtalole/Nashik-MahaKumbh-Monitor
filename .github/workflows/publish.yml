@@ -1,0 +1,69 @@
+name: Scrape and publish
+
+on:
+  schedule:
+    - cron: "47 0 * * *"   # daily 00:47 UTC (06:17 IST)
+  workflow_dispatch:        # run manually from the Actions tab
+  push:
+    branches: [main]
+    paths: ["web/**", "scraper/**", "data/overrides.json", ".github/workflows/publish.yml"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pdftotext
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      # PDFs are cached by id, so only newly published minutes are downloaded each day
+      - uses: actions/cache@v4
+        with:
+          path: data/minutes_text
+          key: minutes-text-${{ github.run_id }}
+          restore-keys: minutes-text-
+
+      - name: Scrape approvals
+        run: python3 scraper/scrape.py
+
+      - name: Scrape meeting minutes
+        run: python3 scraper/scrape_meetings.py --text
+
+      - name: Sanity check scraped data
+        run: |
+          python3 - <<'PY'
+          import json
+          a = json.load(open("data/approvals.json")); m = json.load(open("data/meetings.json"))
+          assert a["count"] >= 100, f"only {a['count']} approvals - layout change?"
+          assert m["count"] >= 50, f"only {m['count']} meetings - layout change?"
+          print(a["count"], "approvals;", m["count"], "meetings")
+          PY
+
+      - name: Include raw data in site
+        run: mkdir -p web/raw && cp data/approvals.json data/meetings.json web/raw/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
