@@ -75,3 +75,21 @@ code{background:var(--line);padding:0 4px;border-radius:4px}
   .kpi .v{font-size:20px}
   .hide-sm{display:none}
 }
+
+.tabs{max-width:1200px;margin:0 auto;padding:8px 16px 0;display:flex;gap:6px}
+.tabs a{padding:8px 16px;border-radius:8px 8px 0 0;text-decoration:none;color:var(--muted);font-weight:600;border-bottom:2px solid transparent}
+.tabs a.on{color:var(--accent);border-bottom-color:var(--accent)}
+.badge{background:var(--accent);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;margin-left:4px}
+select,input[type=search]{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit;max-width:100%}
+input[type=search]{min-width:230px}
+.mcol.sel .b{background:var(--accent)}
+.mcol{cursor:pointer}
+.mcol .b{background:var(--bar2)}
+.tag.new{background:var(--accent);color:#fff}
+.mtext{white-space:pre-wrap;background:var(--bg);border-radius:8px;padding:10px;font-size:13px;max-height:320px;overflow:auto;line-height:1.6}
+.mcol.zero{cursor:default}
+[hidden]{display:none!important}
+main>*{min-width:0}
+#mMonths{overflow-x:auto;gap:6px}
+#mMonths .mcol{min-width:26px;flex:1 0 26px}
+#mList{overflow-x:auto}

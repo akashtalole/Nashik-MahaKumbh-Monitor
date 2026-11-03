@@ -18,3 +18,8 @@ No dependencies (Python stdlib, vanilla JS).
 - Revisions/corrigenda are excluded from totals (net change shown when the title discloses old and new amounts). Suspected duplicates are excluded unless toggled.
 - Sector/agency come from keyword rules in `scraper/scrape.py`; fix mistakes in `data/overrides.json` (keyed by order id).
 - Order PDFs are scanned images (no text layer). Work-level detail would need Marathi OCR — not done yet.
+
+## Meetings tab
+`python3 scraper/scrape_meetings.py [--text]` scrapes <https://divcomnashik.maharashtra.gov.in/en/meeting-proceedings/> into `data/meetings.json` + `web/meetings_data.js`.
+Date, forum, chair and topic come from titles. `--text` downloads the PDFs (slow, ~5 min, needs `pdftotext`) and stores lossy Marathi text for search; it caches in `data/minutes_text/` (git-ignored).
+Minutes you haven't seen before in a browser are tagged **NEW** (stored in localStorage).
