@@ -97,7 +97,7 @@
   }
   function facets() { facet("mFacetForum", "forum", "forum", "mForum"); facet("mFacetChair", "chair", "chair", "mChair"); facet("mFacetTopic", "topic_group", "topic", "mTopic"); }
   function render() { kpis(); facets(); months(); list(); }
-  window.Meetings = { sync() { F.forum = F.chair = F.topic = ""; } };
+  window.Meetings = { open };
   // opening the tab counts as having seen everything (badge stays for this visit)
   window.addEventListener("pagehide", () => { if (location.hash === "#meetings") markSeen(); });
   if (firstVisit) markSeen();

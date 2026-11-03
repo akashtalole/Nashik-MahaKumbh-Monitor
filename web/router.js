@@ -1,11 +1,12 @@
 (function () {
   const $ = (id) => document.getElementById(id);
-  const views = ["overview", "spend", "meetings"];
+  const views = ["overview", "spend", "orders", "treemap", "timeline", "meetings"];
   function route() {
     let v = location.hash.slice(1); if (!views.includes(v)) v = "overview";
     views.forEach((n) => { $("view-" + n).hidden = n !== v; $("tab-" + n).classList.toggle("on", n === v); });
     window.Kumbh.closeDrawer && window.Kumbh.closeDrawer();
     window.scrollTo(0, 0);
+    window.dispatchEvent(new Event("viewshown"));
   }
   window.addEventListener("hashchange", route);
   document.querySelectorAll("[data-go]").forEach((b) => (b.onclick = () => (location.hash = "#" + b.dataset.go)));

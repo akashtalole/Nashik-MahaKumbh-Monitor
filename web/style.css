@@ -203,3 +203,26 @@ footer{max-width:1240px;margin:auto;padding:0 20px 40px;color:var(--ink-3);font-
   input[type=search]{min-width:0;width:100%}
 }
 @media(prefers-reduced-motion:reduce){.drawer{transition:none}}
+
+.btn.sm{padding:7px 12px;margin:0;border:0;cursor:pointer}
+.tabs{overflow-x:auto;max-width:100%}
+th.sort{cursor:pointer;user-select:none}th.sort:hover{color:var(--ink)}
+th.sort[aria-sort]::after{content:attr(data-arrow);margin-left:4px}
+.tmap{position:relative;width:100%;height:540px;border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.tile{position:absolute;border:2px solid var(--surface);border-radius:8px;padding:8px 10px;overflow:hidden;cursor:pointer;text-align:left;color:var(--ink);font-size:12.5px;line-height:1.3}
+.tile.dk{color:#fff}
+.tile:hover,.tile:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;z-index:2}
+.tile b{display:block;font-size:13.5px}
+.tile span{opacity:.9;font-variant-numeric:tabular-nums}
+.feed{display:grid;gap:12px}
+.fm{display:grid;grid-template-columns:130px 1fr;gap:16px}
+.fm .when{position:sticky;top:76px;align-self:start}
+.fm .when b{font-size:18px;display:block}.fm .when span{color:var(--ink-3);font-size:12.5px;display:block}
+.ev{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;padding:8px 6px;border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;color:inherit;text-align:left;cursor:pointer;border-radius:6px}
+.ev:hover,.ev:focus-visible{background:var(--accent-soft);outline:none}
+.ev .k{font-size:11px;font-weight:700;border-radius:999px;padding:1px 9px;white-space:nowrap}
+.ev .k.m{background:color-mix(in srgb,var(--s3) 22%,var(--surface));color:var(--ink)}
+.ev .k.o{background:color-mix(in srgb,var(--s1) 18%,var(--surface));color:var(--ink)}
+.ev .t small{display:block;color:var(--ink-3)}
+.ev .v{font-variant-numeric:tabular-nums;font-weight:650;white-space:nowrap}
+@media(max-width:700px){.fm{grid-template-columns:1fr}.fm .when{position:static}.tmap{height:420px}}

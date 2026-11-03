@@ -1,7 +1,7 @@
 import sys, unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scraper"))
-from scrape import parse_amount, parse_works, is_revision, parse_old_amount
+from scrape import parse_amount, parse_works, is_revision, parse_old_amount, locate
 
 class T(unittest.TestCase):
     def test_amounts(self):
@@ -16,6 +16,12 @@ class T(unittest.TestCase):
         self.assertTrue(is_revision("Revised Administrative Approval Order"))
         self.assertFalse(is_revision("Revised for 02 Works and Administrative Approval for 02 New Works"))
         self.assertEqual(parse_old_amount("revising the previously approved amount of ₹3.50 crore to ₹4.50 crore"), 3.5)
+    def test_location_ignores_event_name(self):
+        # every title contains "Nashik Trimbakeshwar Simhastha Kumbh Mela": it must not decide the location
+        self.assertEqual(locate("Public Works Department for Nashik Trimbakeshwar Simhastha Kumbh Mela - Total works-14"), "Not stated in title")
+        self.assertEqual(locate("ghat at Trimbakeshwar for Nashik Trimbakeshwar Simhastha Kumbh Mela"), "Trimbakeshwar")
+        self.assertEqual(locate("Construction of the project for developing Nashik Ring Road"), "Nashik Ring Road")
+        self.assertEqual(locate("internal roads and parking lot works at Shirdi"), "Shirdi")
 
 if __name__ == "__main__":
     unittest.main()

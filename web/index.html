@@ -15,7 +15,10 @@
     </div>
     <nav class="tabs" aria-label="Views">
       <a href="#overview" id="tab-overview">Overview</a>
-      <a href="#spend" id="tab-spend">Spend drill-down</a>
+      <a href="#spend" id="tab-spend">Drill-down</a>
+      <a href="#orders" id="tab-orders">Orders</a>
+      <a href="#treemap" id="tab-treemap">Treemap</a>
+      <a href="#timeline" id="tab-timeline">Timeline</a>
       <a href="#meetings" id="tab-meetings">Meetings <span class="badge" id="newBadge" hidden></span></a>
     </nav>
     <button class="icon-btn" id="themeBtn" title="Toggle light/dark" aria-label="Toggle light or dark theme">
@@ -101,6 +104,7 @@
         <div class="seg" role="group" aria-label="Group by" id="groupSeg">
           <button data-g="sector" class="on">By sector</button>
           <button data-g="agency">By agency</button>
+          <button data-g="location">By location</button>
         </div>
         <label class="chk"><input type="checkbox" id="optDup"> include suspected duplicates</label>
       </div>
@@ -117,6 +121,60 @@
     <p class="hint">Month the order PDF was published (a proxy for approval date; titles carry no date).</p>
     <div id="months" class="months"></div>
   </section>
+</main>
+
+<!-- ============ ORDERS EXPLORER ============ -->
+<main id="view-orders" hidden>
+  <section class="card">
+    <div class="bar-head">
+      <h2 id="oTitle">All orders</h2>
+      <div class="controls">
+        <input id="oSearch" type="search" placeholder="Search order titles" aria-label="Search orders">
+        <select id="oSector" aria-label="Sector"></select>
+        <select id="oAgency" aria-label="Agency"></select>
+        <select id="oLoc" aria-label="Location"></select>
+        <select id="oType" aria-label="Order type">
+          <option value="counted">Counted approvals</option>
+          <option value="rev">Revisions &amp; corrigenda</option>
+          <option value="all">Everything</option>
+        </select>
+        <label class="chk">min ₹ cr <input id="oMin" type="number" min="0" step="1" value="0" style="width:84px"></label>
+        <button class="btn sm" id="oCsv">Export CSV</button>
+      </div>
+    </div>
+    <p class="hint" id="oSummary"></p>
+    <div id="oTable"></div>
+  </section>
+</main>
+
+<!-- ============ TREEMAP ============ -->
+<main id="view-treemap" hidden>
+  <section class="card">
+    <div class="bar-head">
+      <nav class="crumbs" id="tCrumbs" aria-label="Treemap path"></nav>
+      <div class="seg" role="group" aria-label="Group by" id="tSeg">
+        <button data-g="sector" class="on">Sector</button>
+        <button data-g="agency">Agency</button>
+        <button data-g="location">Location</button>
+      </div>
+    </div>
+    <p class="hint">Tile area = approved ₹ crore. Click a tile to zoom into its orders; click an order tile for details.</p>
+    <div id="tMap" class="tmap"></div>
+    <div class="legend"><span>smaller share</span><i></i><span>larger share</span></div>
+  </section>
+</main>
+
+<!-- ============ TIMELINE ============ -->
+<main id="view-timeline" hidden>
+  <section class="card">
+    <div class="bar-head">
+      <div><h2>Activity timeline</h2><p class="sub" style="margin-bottom:0">Meetings by date and orders by the month their PDF was published, newest first</p></div>
+      <div class="seg" role="group" aria-label="Show" id="lSeg">
+        <button data-k="all" class="on">All</button><button data-k="orders">Orders</button><button data-k="meetings">Meetings</button>
+      </div>
+    </div>
+  </section>
+  <div id="lFeed" class="feed"></div>
 </main>
 
 <!-- ============ MEETINGS ============ -->
@@ -154,7 +212,7 @@
   </section>
 </main>
 
-<footer id="meta"></footer>
+<footer><span id="meta"></span> · Data: <a href="raw/approvals.json">approvals.json</a> · <a href="raw/meetings.json">meetings.json</a></footer>
 
 <aside id="drawer" class="drawer" aria-hidden="true">
   <div class="drawer-inner">
@@ -170,6 +228,7 @@
 <script src="app.js"></script>
 <script src="meetings.js"></script>
 <script src="overview.js"></script>
+<script src="explore.js"></script>
 <script src="router.js"></script>
 </body>
 </html>

@@ -189,6 +189,7 @@
       row("Minutes that are scanned images", scanned, M.count, "No text search possible");
   }
 
+  K.short = short; K.cr = cr; K.esc = esc; K.tip = tip;
   K.subs.push(render);
   render();
 })();

@@ -4,11 +4,11 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (v, d = 2) => "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d }) + " cr";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const DIM = { sector: "Sector", agency: "Implementing agency" };
+  const DIM = { sector: "Sector", agency: "Implementing agency", location: "Location" };
 
   // state: group = first-level dimension; path = [value at level1, value at level2]
   const S = { group: "sector", path: [], dup: false };
-  const other = () => (S.group === "sector" ? "agency" : "sector");
+  const other = () => (S.group === "sector" ? "agency" : "sector");  // location/agency -> sector
 
   const isCounted = (i) => i.amount_cr != null && !i.is_revision && (S.dup || !i.possible_duplicate);
 
