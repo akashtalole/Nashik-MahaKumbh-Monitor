@@ -8,21 +8,92 @@
 </head>
 <body>
 <header class="top">
-  <div>
-    <h1>Nashik–Trimbakeshwar Simhastha Kumbh 2026–27</h1>
-    <p class="sub">Government administrative approvals, drill-down monitor</p>
+  <div class="top-in">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+      <div><h1>Nashik Kumbh Monitor</h1><p>Simhastha 2026–27 · approvals &amp; meetings</p></div>
+    </div>
+    <nav class="tabs" aria-label="Views">
+      <a href="#overview" id="tab-overview">Overview</a>
+      <a href="#spend" id="tab-spend">Spend drill-down</a>
+      <a href="#meetings" id="tab-meetings">Meetings <span class="badge" id="newBadge" hidden></span></a>
+    </nav>
+    <button class="icon-btn" id="themeBtn" title="Toggle light/dark" aria-label="Toggle light or dark theme">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
   </div>
-  <div class="meta" id="meta"></div>
 </header>
 
-<nav class="tabs" aria-label="Views">
-  <a href="#spend" id="tab-spend">Spend</a>
-  <a href="#meetings" id="tab-meetings">Meetings <span class="badge" id="newBadge" hidden></span></a>
-</nav>
+<!-- ============ OVERVIEW ============ -->
+<main id="view-overview">
+  <section class="hero" id="hero"></section>
+  <section class="insights" id="insights" aria-label="Insights"></section>
 
-<main id="view-spend">
+  <div class="grid2">
+    <section class="card">
+      <div class="card-head"><h2>Where the money is approved</h2><button class="link" data-go="spend">Drill down →</button></div>
+      <p class="sub">Approved amount by sector · click to explore</p>
+      <div id="ovSectors"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><h2>Who is implementing</h2><button class="link" id="ovAgencyGo">Drill down →</button></div>
+      <p class="sub">Approved amount by implementing agency (as named in the order title)</p>
+      <div id="ovAgencies"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Ten largest approvals</h2>
+    <p class="sub">Click an order for details and its PDF</p>
+    <div id="ovTop"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <h2>Cumulative approvals</h2>
+      <p class="sub">Running total by month the order PDF was published</p>
+      <div id="ovCum" class="svgwrap"></div>
+    </section>
+    <section class="card">
+      <h2>Order size distribution</h2>
+      <p class="sub">Total ₹ crore approved in each order-size band</p>
+      <div id="ovSize" class="months"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Sector × agency</h2>
+    <p class="sub">Which agencies carry which sectors · click a cell to open its orders</p>
+    <div class="heat" id="ovHeat"></div>
+    <div class="legend"><span>less</span><i></i><span>more (shade scales with √₹)</span></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="card-head"><h2>Meetings at a glance</h2><button class="link" data-go="meetings">Open minutes →</button></div>
+      <p class="sub">From the meeting-proceedings page</p>
+      <div id="ovMeet"></div>
+    </section>
+    <section class="card">
+      <h2>Data quality</h2>
+      <p class="sub">What the numbers can and cannot be trusted for</p>
+      <div class="dq" id="ovDq"></div>
+    </section>
+  </div>
+
+  <section class="card notes">
+    <h2>How to read this</h2>
+    <ul>
+      <li>Amounts are <b>administrative approvals</b> (sanctioned ceilings), <b>not</b> money spent. Actual expenditure is not published on the source page.</li>
+      <li>Revision orders and corrigenda restate earlier approvals, so they are excluded from totals; disclosed old→new changes are shown as net revisions.</li>
+      <li>Sector and agency are inferred from order titles by keyword rules and can be wrong. Corrections go in <code>data/overrides.json</code>.</li>
+    </ul>
+  </section>
+</main>
+
+<!-- ============ SPEND DRILL-DOWN ============ -->
+<main id="view-spend" hidden>
   <section class="kpis" id="kpis" aria-label="Key figures"></section>
-
   <section class="card">
     <div class="bar-head">
       <nav class="crumbs" id="crumbs" aria-label="Drill-down path"></nav>
@@ -37,31 +108,25 @@
     <p class="hint" id="hint"></p>
     <div id="chart" class="chart"></div>
   </section>
-
   <section class="card" id="ordersCard" hidden>
     <h2 id="ordersTitle">Orders</h2>
     <div id="orders"></div>
   </section>
-
   <section class="card">
     <h2>Approvals by upload month</h2>
-    <p class="hint">Month the order PDF was published on the site (a proxy for approval date; orders carry no date in their title).</p>
+    <p class="hint">Month the order PDF was published (a proxy for approval date; titles carry no date).</p>
     <div id="months" class="months"></div>
-  </section>
-
-  <section class="card notes">
-    <h2>How to read this</h2>
-    <ul>
-      <li>Amounts are <b>administrative approvals</b> (sanctioned ceilings), <b>not</b> money spent. Actual expenditure is not published on this page.</li>
-      <li>Revised orders and corrigenda restate earlier approvals, so they are excluded from totals; where the title gives old and new amounts the net change is shown separately.</li>
-      <li>Sector and agency are inferred from order titles by keyword rules and may be wrong; "Not stated in title" means the title does not name an implementing agency. Corrections go in <code>data/overrides.json</code>.</li>
-      <li>The PDFs are scanned images, so per-work line items are not extracted; each order links to its source PDF.</li>
-    </ul>
   </section>
 </main>
 
+<!-- ============ MEETINGS ============ -->
 <main id="view-meetings" hidden>
   <section class="kpis" id="mKpis" aria-label="Meeting figures"></section>
+  <div class="grid3">
+    <section class="card"><h2>By forum</h2><p class="sub">Click to filter</p><div id="mFacetForum"></div></section>
+    <section class="card"><h2>By chair</h2><p class="sub">As named in the title</p><div id="mFacetChair"></div></section>
+    <section class="card"><h2>By topic</h2><p class="sub">Inferred from the title</p><div id="mFacetTopic"></div></section>
+  </div>
   <section class="card">
     <h2>Meetings per month</h2>
     <p class="hint">Click a month to filter the list below.</p>
@@ -74,7 +139,7 @@
         <select id="mForum" aria-label="Forum"></select>
         <select id="mChair" aria-label="Chair"></select>
         <select id="mTopic" aria-label="Topic"></select>
-        <input id="mSearch" type="search" placeholder="Search titles &amp; PDF text (Marathi ok)" aria-label="Search">
+        <input id="mSearch" type="search" placeholder="Search titles &amp; PDF text" aria-label="Search">
       </div>
     </div>
     <div id="mList"></div>
@@ -82,12 +147,14 @@
   <section class="card notes">
     <h2>How to read this</h2>
     <ul>
-      <li>Date, forum, chair and topic come from the minutes' titles on the site. Many titles name no topic, so “General review” is common.</li>
-      <li>PDF text search covers Marathi minutes that have a text layer; extraction is lossy (some characters are dropped) and scanned PDFs are not searchable.</li>
+      <li>Date, forum, chair and topic come from the minutes' titles. Many titles name no topic, so “General review” is common.</li>
+      <li>PDF text covers Marathi minutes with a text layer; extraction is lossy and scanned PDFs are not searchable.</li>
       <li><b>NEW</b> marks minutes not seen before in this browser.</li>
     </ul>
   </section>
 </main>
+
+<footer id="meta"></footer>
 
 <aside id="drawer" class="drawer" aria-hidden="true">
   <div class="drawer-inner">
@@ -96,10 +163,13 @@
   </div>
 </aside>
 <div id="scrim" class="scrim" hidden></div>
+<div id="tip" hidden role="tooltip"></div>
 
 <script src="data.js"></script>
 <script src="meetings_data.js"></script>
 <script src="app.js"></script>
 <script src="meetings.js"></script>
+<script src="overview.js"></script>
+<script src="router.js"></script>
 </body>
 </html>
