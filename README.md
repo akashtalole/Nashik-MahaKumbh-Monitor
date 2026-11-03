@@ -3,6 +3,8 @@
 Drill-down dashboard of government **administrative approvals** for the Nashik–Trimbakeshwar Simhastha Kumbh Mela 2026–27, scraped from
 <https://divcomnashik.maharashtra.gov.in/en/administrative-approvals/>.
 
+Views: **Overview**, **Drill-down**, **Orders** (searchable/sortable table, CSV export), **Treemap**, **Timeline** (meetings + orders by month), **Meetings**.
+
 Drill path: **All spend → sector (or agency) → agency (or sector) → orders → order detail + source PDF.**
 
 ## Run

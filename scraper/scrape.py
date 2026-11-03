@@ -50,6 +50,22 @@ AGENCIES = [
     ("Resident Deputy Collector", r"resident deputy collector"),
 ]
 
+# Location is matched AFTER removing the event name, which itself contains "Nashik-Trimbakeshwar".
+LOCATIONS = [
+    ("Nashik Ring Road", r"ring road"),
+    ("Ozar (HAL airport)", r"ozar|hindustan aeronautics"),
+    ("Shirdi", r"shirdi"),
+    ("Ahilyanagar district", r"ahilyanagar|sangamner"),
+    ("Saptashrungi Gad", r"saptashrung"),
+    ("Trimbakeshwar", r"trimbak|brahmagiri|anjaneri|kavanai|kavnai|beje|taked|kushavarta"),
+    ("Nashik city", r"nashik municipal corporation|nashik city|nashik ?road|panchavati|tapovan|godavari|ramkund|nandur|dasak|gangapur|chandshi|jalalpur|naroshankar|odha|takli|navshya|anandavalli|nashik"),
+]
+EVENT_RX = re.compile(r"nashik[\s–-]*trimbakeshwar[\s–-]*(simhastha[\s–-]*)?(kumbh[\s–-]*mela)?(\s*authority)?(\s*2027|\s*2026[–-]27)?|simhastha|kumbh mela( authority)?", re.I)
+
+def locate(title):
+    t = EVENT_RX.sub(" ", title)
+    return classify(LOCATIONS, t, "Not stated in title")
+
 def classify(rules, text, default):
     t = text.lower()
     for name, rx in rules:
@@ -132,6 +148,7 @@ def parse(page):
             "old_amount_cr": parse_old_amount(title),
             "sector": classify(SECTORS, title, "Unclassified"),
             "agency": classify(AGENCIES, title, "Not stated in title"),
+            "location": locate(title),
             "flags": [],
         })
     return out

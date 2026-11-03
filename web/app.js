@@ -1,13 +1,14 @@
 (function () {
   const D = window.KUMBH_DATA;
+  const K = (window.Kumbh = { subs: [] });
   const $ = (id) => document.getElementById(id);
   const fmt = (v, d = 2) => "₹" + v.toLocaleString("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d }) + " cr";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const DIM = { sector: "Sector", agency: "Implementing agency" };
+  const DIM = { sector: "Sector", agency: "Implementing agency", location: "Location" };
 
   // state: group = first-level dimension; path = [value at level1, value at level2]
   const S = { group: "sector", path: [], dup: false };
-  const other = () => (S.group === "sector" ? "agency" : "sector");
+  const other = () => (S.group === "sector" ? "agency" : "sector");  // location/agency -> sector
 
   const isCounted = (i) => i.amount_cr != null && !i.is_revision && (S.dup || !i.possible_duplicate);
 
@@ -35,7 +36,7 @@
       ["Net revisions", (D.net_revisions_cr >= 0 ? "+" : "") + fmt(D.net_revisions_cr), `${revs} revision orders · disclosed deltas only`],
       ["Needs PDF check", String(nofig), "orders with no amount in title"],
     ].map(([l, v, s]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
-    $("meta").innerHTML = `Source: <a href="${D.source}" target="_blank" rel="noopener">divcomnashik.maharashtra.gov.in</a><br>Scraped ${new Date(D.scraped_at).toLocaleString("en-IN")} · ${D.count} orders`;
+    $("meta").innerHTML = `Source: <a href="${D.source}" target="_blank" rel="noopener">divcomnashik.maharashtra.gov.in</a> · Scraped ${new Date(D.scraped_at).toLocaleString("en-IN")} · ${D.count} orders`;
   }
 
   function renderCrumbs() {
@@ -129,6 +130,12 @@
   }));
   $("optDup").onchange = (e) => { S.dup = e.target.checked; render(); };
 
-  function render() { renderKpis(); renderCrumbs(); renderChart(); renderOrders(); renderMonths(); }
+  function render() { renderKpis(); renderCrumbs(); renderChart(); renderOrders(); renderMonths(); K.subs.forEach((f) => f()); }
+  K.openOrder = openDrawer; K.isCounted = isCounted; K.closeDrawer = closeDrawer;
+  K.drill = (g, path) => {
+    S.group = g; S.path = path || [];
+    document.querySelectorAll("#groupSeg button").forEach((x) => x.classList.toggle("on", x.dataset.g === g));
+    render();
+  };
   render();
 })();

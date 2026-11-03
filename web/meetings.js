@@ -13,13 +13,7 @@
   const newCount = M.items.filter(isNew).length;
   function markSeen() { try { localStorage.setItem("kumbh_seen_meetings", JSON.stringify(M.items.map((i) => i.id))); } catch (e) {} }
 
-  // tabs
-  function route() {
-    const m = location.hash === "#meetings";
-    $("view-spend").hidden = m; $("view-meetings").hidden = !m;
-    $("tab-spend").classList.toggle("on", !m); $("tab-meetings").classList.toggle("on", m);
-    if (m) { render(); }
-  }
+  function route() { if (location.hash === "#meetings") render(); }
   window.addEventListener("hashchange", route);
   if (newCount) { $("newBadge").hidden = false; $("newBadge").textContent = newCount + " new"; }
 
@@ -94,7 +88,16 @@
     $("drawer").classList.add("open"); $("drawer").setAttribute("aria-hidden", "false"); $("scrim").hidden = false;
   }
 
-  function render() { kpis(); months(); list(); }
+  function facet(id, key, filterKey, selectId) {
+    const c = {}; M.items.forEach((i) => (c[i[key]] = (c[i[key]] || 0) + 1));
+    const rows = Object.entries(c).sort((a, b) => b[1] - a[1]); const max = rows[0][1];
+    $(id).innerHTML = rows.map(([k, n]) => `<button class="row" data-k="${esc(k)}" style="grid-template-columns:minmax(110px,210px) 1fr 34px;${F[filterKey] === k ? "background:var(--accent-soft)" : ""}">
+      <span class="n" style="white-space:normal;line-height:1.3">${esc(k)}</span><span class="track"><span class="fill" style="width:${(n / max) * 100}%"></span></span><span class="a">${n}</span></button>`).join("");
+    $(id).querySelectorAll(".row").forEach((b) => (b.onclick = () => { F[filterKey] = F[filterKey] === b.dataset.k ? "" : b.dataset.k; $(selectId).value = F[filterKey]; render(); }));
+  }
+  function facets() { facet("mFacetForum", "forum", "forum", "mForum"); facet("mFacetChair", "chair", "chair", "mChair"); facet("mFacetTopic", "topic_group", "topic", "mTopic"); }
+  function render() { kpis(); facets(); months(); list(); }
+  window.Meetings = { open };
   // opening the tab counts as having seen everything (badge stays for this visit)
   window.addEventListener("pagehide", () => { if (location.hash === "#meetings") markSeen(); });
   if (firstVisit) markSeen();
